@@ -49,7 +49,8 @@ if (letterList) {
   letterList.addEventListener("click", (e) => {
     const targetCard = e.target.closest(".letter-card");
     if (targetCard) {
-      const sibling = targetCard.nextElementSibling;
+      const sibling =
+        targetCard.nextElementSibling.querySelector("letter-card");
       sibling.classList.toggle("open");
     }
   });

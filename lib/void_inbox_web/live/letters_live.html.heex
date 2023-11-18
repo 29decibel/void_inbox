@@ -2,24 +2,39 @@
   Inbox
 </.header>
 
-
 <ul class="letter-list">
   <%= for letter <- @letters do %>
-    <li class="shadow my-4 p-4 rounded-lg">
-    <button class="letter-card">
-    <div>
-      <%= letter.subject %>
-      <%= letter.from_name %>
-      <%= letter.from_email %>
-    </div>
-    </button>
-    
-     <letter-card class="prose">
-        <template shadowrootmode="closed">
-          <slot></slot>
-        </template>
-        <%= raw(letter.html_content) %>
-      </letter-card>
+    <li class="shadow my-4 p-4 rounded-lg relative">
+      <button
+        class="letter-card flex flex-row items-center"
+        phx-click="mark-read"
+        phx-value-id={letter.id}
+      >
+        <div class="flex flex-row items-center">
+          <div>
+            <div class="rounded-full border-4 w-10 h-10 flex items-center justify-center font-bold text-gray-600">
+              <%= letter.from_name |> first_letter() %>
+            </div>
+          </div>
+          <p class={if letter.read, do: "ml-2 text-gray-600", else: "ml-2 font-bold"}>
+            <%= letter.subject %>
+          </p>
+        </div>
+
+        <div class="absolute right-5 text-gray-600">
+          <%= letter.from_name %>
+        </div>
+      </button>
+
+      <!-- Need this extra div wrapper because phx-update ignore only apply to the children -->
+      <div id={"letter-card-" <> letter.id} phx-update="ignore">
+        <letter-card class="prose">
+          <template shadowrootmode="closed">
+            <slot></slot>
+          </template>
+          <%= raw(letter.html_content) %>
+        </letter-card>
+      </div>
     </li>
   <% end %>
 </ul>
