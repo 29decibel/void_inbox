@@ -31,7 +31,7 @@ config :void_inbox, VoidInboxWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :void_inbox, VoidInbox.Mailer, adapter: Swoosh.Adapters.Local
 
-config :void_inbox, email_domain: "voidinbox.app"
+config :void_inbox, email_domain: "voidinbox.orchardlab.dev"
 
 # Configure esbuild (the version is required)
 config :esbuild,
