@@ -16,8 +16,6 @@ defmodule VoidInboxWeb.LettersLive do
         read: true
       })
 
-    IO.inspect(new_letter)
-
     # swap the new letter in the list
     letters = socket.assigns[:letters]
 
