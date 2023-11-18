@@ -17,8 +17,8 @@ defmodule VoidInbox.VoidEmails do
       [%VoidEmail{}, ...]
 
   """
-  def list_void_emails do
-    Repo.all(VoidEmail)
+  def list_void_emails(user_id) do
+    Repo.all(VoidEmail |> where([l], l.user_id == ^user_id) |> order_by(desc: :inserted_at))
   end
 
   @doc """
@@ -36,6 +36,10 @@ defmodule VoidInbox.VoidEmails do
 
   """
   def get_void_email!(id), do: Repo.get!(VoidEmail, id)
+
+  def get_void_email_by_name(name) do
+    Repo.get_by(VoidEmail, name: name)
+  end
 
   @doc """
   Creates a void_email.

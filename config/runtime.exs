@@ -53,6 +53,8 @@ if config_env() == :prod do
 
   config :void_inbox, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  config :void_inbox, smtp_port: 2525
+
   config :void_inbox, VoidInboxWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [

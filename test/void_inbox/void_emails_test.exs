@@ -36,14 +36,19 @@ defmodule VoidInbox.VoidEmailsTest do
       void_email = void_email_fixture()
       update_attrs = %{name: "some updated name", status: "some updated status"}
 
-      assert {:ok, %VoidEmail{} = void_email} = VoidEmails.update_void_email(void_email, update_attrs)
+      assert {:ok, %VoidEmail{} = void_email} =
+               VoidEmails.update_void_email(void_email, update_attrs)
+
       assert void_email.name == "some updated name"
       assert void_email.status == "some updated status"
     end
 
     test "update_void_email/2 with invalid data returns error changeset" do
       void_email = void_email_fixture()
-      assert {:error, %Ecto.Changeset{}} = VoidEmails.update_void_email(void_email, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               VoidEmails.update_void_email(void_email, @invalid_attrs)
+
       assert void_email == VoidEmails.get_void_email!(void_email.id)
     end
 

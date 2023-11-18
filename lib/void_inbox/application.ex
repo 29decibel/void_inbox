@@ -17,7 +17,9 @@ defmodule VoidInbox.Application do
       # Start a worker by calling: VoidInbox.Worker.start_link(arg)
       # {VoidInbox.Worker, arg},
       # Start to serve requests, typically the last entry
-      VoidInboxWeb.Endpoint
+      VoidInboxWeb.Endpoint,
+      # SMTP server
+      Smtp.Server
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

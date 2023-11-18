@@ -1,0 +1,10 @@
+<h1>Letters</h1>
+<ul>
+  <%= for letter <- @letters do %>
+    <li>
+      <%= letter.from_name %>
+      <%= letter.from_email %>
+      <%= letter.subject %>
+    </li>
+  <% end %>
+</ul>

@@ -3,76 +3,6 @@ defmodule VoidInboxWeb.UserSettingsLive do
 
   alias VoidInbox.Accounts
 
-  def render(assigns) do
-    ~H"""
-    <.header class="text-center">
-      Account Settings
-      <:subtitle>Manage your account email address and password settings</:subtitle>
-    </.header>
-
-    <div class="space-y-12 divide-y">
-      <div>
-        <.simple_form
-          for={@email_form}
-          id="email_form"
-          phx-submit="update_email"
-          phx-change="validate_email"
-        >
-          <.input field={@email_form[:email]} type="email" label="Email" required />
-          <.input
-            field={@email_form[:current_password]}
-            name="current_password"
-            id="current_password_for_email"
-            type="password"
-            label="Current password"
-            value={@email_form_current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
-          </:actions>
-        </.simple_form>
-      </div>
-      <div>
-        <.simple_form
-          for={@password_form}
-          id="password_form"
-          action={~p"/users/log_in?_action=password_updated"}
-          method="post"
-          phx-change="validate_password"
-          phx-submit="update_password"
-          phx-trigger-action={@trigger_submit}
-        >
-          <.input
-            field={@password_form[:email]}
-            type="hidden"
-            id="hidden_user_email"
-            value={@current_email}
-          />
-          <.input field={@password_form[:password]} type="password" label="New password" required />
-          <.input
-            field={@password_form[:password_confirmation]}
-            type="password"
-            label="Confirm new password"
-          />
-          <.input
-            field={@password_form[:current_password]}
-            name="current_password"
-            type="password"
-            label="Current password"
-            id="current_password_for_password"
-            value={@current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
-          </:actions>
-        </.simple_form>
-      </div>
-    </div>
-    """
-  end
-
   def mount(%{"token" => token}, _session, socket) do
     socket =
       case Accounts.update_user_email(socket.assigns.current_user, token) do
@@ -91,6 +21,11 @@ defmodule VoidInboxWeb.UserSettingsLive do
     email_changeset = Accounts.change_user_email(user)
     password_changeset = Accounts.change_user_password(user)
 
+    void_email_changeset =
+      VoidInbox.VoidEmails.change_void_email(%VoidInbox.VoidEmails.VoidEmail{})
+
+    void_emails = VoidInbox.VoidEmails.list_void_emails(user.id)
+
     socket =
       socket
       |> assign(:current_password, nil)
@@ -98,6 +33,8 @@ defmodule VoidInboxWeb.UserSettingsLive do
       |> assign(:current_email, user.email)
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
+      |> assign(:void_email_form, to_form(void_email_changeset))
+      |> assign(:void_emails, void_emails)
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
@@ -163,5 +100,27 @@ defmodule VoidInboxWeb.UserSettingsLive do
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
     end
+  end
+
+  def handle_event("create_void_email", %{"void_email" => params}, socket) do
+    params = Map.put(params, "user_id", socket.assigns.current_user.id)
+
+    case VoidInbox.VoidEmails.create_void_email(params) do
+      {:ok, void_email} ->
+        # append to existing one
+        void_emails = socket.assigns.void_emails ++ [void_email]
+        {:noreply, assign(socket, void_emails: void_emails)}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, void_email_form: to_form(changeset))}
+    end
+  end
+
+  def handle_event("delete-void-email", %{"id" => id}, socket) do
+    void_email = VoidInbox.VoidEmails.get_void_email!(id)
+    VoidInbox.VoidEmails.delete_void_email(void_email)
+    # remove from current void_emails
+    void_emails = Enum.filter(socket.assigns.void_emails, fn v -> v.id != id end)
+    {:noreply, assign(socket, void_emails: void_emails)}
   end
 end

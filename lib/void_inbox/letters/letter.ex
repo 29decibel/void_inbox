@@ -8,10 +8,12 @@ defmodule VoidInbox.Letters.Letter do
     field :read, :boolean, default: false
     field :raw_message, :map
     field :to_email, :string
+    field :from_name, :string
     field :from_email, :string
     field :html_content, :string
     field :text_content, :string
     field :subject, :string
+    field :date, :utc_datetime
 
     belongs_to :user, VoidInbox.Accounts.User
 
@@ -24,11 +26,13 @@ defmodule VoidInbox.Letters.Letter do
     |> cast(attrs, [
       :raw_message,
       :to_email,
+      :from_name,
       :from_email,
       :html_content,
       :text_content,
       :subject,
       :read,
+      :date,
       :user_id
     ])
     |> validate_required([
@@ -36,6 +40,7 @@ defmodule VoidInbox.Letters.Letter do
       :from_email,
       :subject,
       :read,
+      :date,
       :user_id
     ])
   end

@@ -8,7 +8,15 @@ defmodule VoidInbox.LettersTest do
 
     import VoidInbox.LettersFixtures
 
-    @invalid_attrs %{read: nil, raw_message: nil, to_email: nil, from_email: nil, html_content: nil, text_content: nil, subject: nil}
+    @invalid_attrs %{
+      read: nil,
+      raw_message: nil,
+      to_email: nil,
+      from_email: nil,
+      html_content: nil,
+      text_content: nil,
+      subject: nil
+    }
 
     test "list_letters/0 returns all letters" do
       letter = letter_fixture()
@@ -21,7 +29,15 @@ defmodule VoidInbox.LettersTest do
     end
 
     test "create_letter/1 with valid data creates a letter" do
-      valid_attrs = %{read: true, raw_message: %{}, to_email: "some to_email", from_email: "some from_email", html_content: "some html_content", text_content: "some text_content", subject: "some subject"}
+      valid_attrs = %{
+        read: true,
+        raw_message: %{},
+        to_email: "some to_email",
+        from_email: "some from_email",
+        html_content: "some html_content",
+        text_content: "some text_content",
+        subject: "some subject"
+      }
 
       assert {:ok, %Letter{} = letter} = Letters.create_letter(valid_attrs)
       assert letter.read == true
@@ -39,7 +55,16 @@ defmodule VoidInbox.LettersTest do
 
     test "update_letter/2 with valid data updates the letter" do
       letter = letter_fixture()
-      update_attrs = %{read: false, raw_message: %{}, to_email: "some updated to_email", from_email: "some updated from_email", html_content: "some updated html_content", text_content: "some updated text_content", subject: "some updated subject"}
+
+      update_attrs = %{
+        read: false,
+        raw_message: %{},
+        to_email: "some updated to_email",
+        from_email: "some updated from_email",
+        html_content: "some updated html_content",
+        text_content: "some updated text_content",
+        subject: "some updated subject"
+      }
 
       assert {:ok, %Letter{} = letter} = Letters.update_letter(letter, update_attrs)
       assert letter.read == false

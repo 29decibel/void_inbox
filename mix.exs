@@ -51,7 +51,12 @@ defmodule VoidInbox.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:plug_cowboy, "~> 2.5"}
+      {:plug_cowboy, "~> 2.5"},
+      # got email
+      {:timex, "~> 3.0"},
+      {:gen_smtp, "~> 1.2"},
+      # parsing email is a must dep
+      {:eiconv, "~> 1.0"}
     ]
   end
 

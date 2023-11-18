@@ -68,6 +68,9 @@ defmodule VoidInboxWeb.Router do
       on_mount: [{VoidInboxWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      # letters list
+      live "/letters", LettersLive, :index
     end
   end
 

@@ -65,6 +65,8 @@ config :void_inbox, VoidInboxWeb.Endpoint,
 # Enable dev routes for dashboard and mailbox
 config :void_inbox, dev_routes: true
 
+config :void_inbox, smtp_port: 2527
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
