@@ -1,0 +1,49 @@
+# fly.toml app configuration file generated for void-inbox on 2023-11-18T12:13:03-08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "void-inbox"
+primary_region = "sjc"
+kill_signal = "SIGTERM"
+
+[build]
+
+[deploy]
+  release_command = "/app/bin/migrate"
+
+[env]
+  PHX_HOST = "void-inbox.fly.dev"
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 1000
+
+[[services]]
+  # have to use 2525 otherwise will get this error
+  # o]"Starting SMTP server at port 25"
+  # 2023-09-29T17:41:58Z app[683d3d6f777528] lax [info]17:41:58.656 
+  # [error] Failed to start Ranch listener :gen_smtp_server in :ranch_tcp:listen([{:cacerts, :...}, {:key, :...}, {:cert, :...}, {:port, 25}, {:ip, {0, 0, 0, 0}}, {:keepalive, true}, :inet]) for reason :eacces (permission denied)
+  internal_port = 2525
+  protocol = "tcp"
+
+  # mapping these three ports ALL to internal 25
+  # https://community.fly.io/t/receiving-email-inbound-smtp/1033/24
+  [[services.ports]]
+    port = 25
+
+  [[services.ports]]
+    handlers = ["tls"]
+    port = 465
+
+  [[services.ports]]
+    port = 587
