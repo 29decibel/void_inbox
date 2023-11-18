@@ -1,10 +1,25 @@
-<h1>Letters</h1>
-<ul>
+<.header class="text-center">
+  Inbox
+</.header>
+
+
+<ul class="letter-list">
   <%= for letter <- @letters do %>
-    <li>
+    <li class="shadow my-4 p-4 rounded-lg">
+    <button class="letter-card">
+    <div>
+      <%= letter.subject %>
       <%= letter.from_name %>
       <%= letter.from_email %>
-      <%= letter.subject %>
+    </div>
+    </button>
+    
+     <letter-card class="prose">
+        <template shadowrootmode="closed">
+          <slot></slot>
+        </template>
+        <%= raw(letter.html_content) %>
+      </letter-card>
     </li>
   <% end %>
 </ul>

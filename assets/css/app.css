@@ -3,3 +3,11 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+letter-card {
+  display: none;
+}
+
+letter-card.open {
+  display: block;
+}
