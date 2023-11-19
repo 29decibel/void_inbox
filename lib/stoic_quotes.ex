@@ -1,7 +1,9 @@
 defmodule StoicQuotes do
   def random_quotes do
     # read from priv/static
-    File.read!("priv/static/stoic_quotes.json")
+    :code.priv_dir(:void_inbox)
+    |> Path.join("static/stoic_quotes.json")
+    |> File.read!()
     |> Jason.decode!()
     |> Enum.flat_map(fn {author, quotes} ->
       Enum.map(quotes, fn quote ->
