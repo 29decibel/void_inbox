@@ -129,7 +129,7 @@ defmodule VoidInbox.Letters do
         to_email: to_email,
         from_name: from_name,
         from_email: from_email,
-        html_content: html_body,
+        html_content: html_body |> Html.Cleaning.clean(),
         text_content: text_body,
         subject: subject,
         date: date_string |> parse_date_string,
