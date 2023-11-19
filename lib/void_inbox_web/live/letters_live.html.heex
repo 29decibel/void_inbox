@@ -16,7 +16,9 @@
               <%= letter.from_name |> first_letter() %>
             </div>
           </div>
-          <p class={if letter.read, do: "ml-2 text-gray-600 text-left", else: "ml-2 font-bold text-left"}>
+          <p class={
+            if letter.read, do: "ml-2 text-gray-600 text-left", else: "ml-2 font-bold text-left"
+          }>
             <%= letter.subject %>
           </p>
         </div>
@@ -25,7 +27,6 @@
           <%= letter.from_name %>
         </div>
       </div>
-
       <!-- Need this extra div wrapper because phx-update ignore only apply to the children -->
       <div id={"letter-card-" <> letter.id} phx-update="ignore">
         <letter-card class="prose">

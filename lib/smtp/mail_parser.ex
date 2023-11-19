@@ -24,10 +24,10 @@ defmodule Smtp.MailParser do
           }
         end
 
-      {"multipart", "mixed", headers, _, array_of_muti_parts} ->
+      {"multipart", "mixed", headers, _, array_of_multi_parts} ->
         %{
           headers: headers |> parse_headers(),
-          body: array_of_muti_parts |> List.first() |> parse_email(true)
+          body: array_of_multi_parts |> List.first() |> parse_email(true)
         }
 
       {"text", "plain", headers, _, just_text} ->

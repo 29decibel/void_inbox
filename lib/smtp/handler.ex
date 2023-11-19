@@ -4,7 +4,7 @@ defmodule Smtp.Handler do
 
   def init(hostname, session_count, _address, _options) do
     if session_count > 40 do
-      Logger.warn("SMTP server connection limit exceeded")
+      Logger.warning("SMTP server connection limit exceeded")
       {:stop, :normal, ["421", hostname, " is too busy to accept mail right now"]}
     else
       banner = [hostname, " ESMTP"]
@@ -15,9 +15,6 @@ defmodule Smtp.Handler do
 
   def handle_DATA(_from, _to, data, state) do
     Logger.info("Received DATA:")
-
-    state
-    |> Map.put(:body, data)
 
     Smtp.MailParser.parse_email_data(data)
     |> VoidInbox.Letters.create_letter_from_smtp_handler()
@@ -60,7 +57,7 @@ defmodule Smtp.Handler do
   end
 
   def handle_VRFY(_address, state) do
-    {:ok, '252 VRFY disabled by policy, just send some mail', state}
+    {:ok, ~c"252 VRFY disabled by policy, just send some mail", state}
   end
 
   def handle_other(command, _args, state) do
