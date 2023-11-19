@@ -6,6 +6,7 @@
 
 letter-card {
   display: none;
+  overflow: auto;
 }
 
 letter-card.open {
