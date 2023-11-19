@@ -20,7 +20,7 @@
 <% end %>
 <ul class="letter-list">
   <%= for letter <- @letters do %>
-    <li class="shadow my-4 p-4 rounded-lg relative">
+    <li class="shadow my-4 p-4 rounded-lg relative bg-white">
       <div
         class="letter-card flex flex-row items-center cursor-pointer"
         phx-click={JS.push("mark-read") |> JS.toggle(to: "#letter-card-#{letter.id} iframe") |> JS.dispatch("resize-iframe-height", to: "#letter-card-#{letter.id} iframe")}
