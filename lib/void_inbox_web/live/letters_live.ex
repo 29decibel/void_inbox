@@ -42,4 +42,10 @@ defmodule VoidInboxWeb.LettersLive do
     |> Enum.find(&(&1 =~ ~r/[[:alpha:]]/))
     |> String.upcase()
   end
+
+  def letter_content(%VoidInbox.Letters.Letter{html_content: html_content})
+      when is_binary(html_content),
+      do: html_content
+
+  def letter_content(%VoidInbox.Letters.Letter{text_content: text_content}), do: text_content
 end

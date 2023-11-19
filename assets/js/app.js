@@ -43,15 +43,24 @@ liveSocket.connect();
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket;
 
-// toggle letter card
-const letterList = document.querySelector(".letter-list");
-if (letterList) {
-  letterList.addEventListener("click", (e) => {
-    const targetCard = e.target.closest(".letter-card");
-    if (targetCard) {
-      const sibling =
-        targetCard.nextElementSibling.querySelector("letter-card");
-      sibling.classList.toggle("open");
+// auto resize the iframe height
+window.addEventListener("resize-iframe-height", (event) => {
+  const iframe = event.target;
+  // only resize the first time
+  if (iframe.getAttribute("srcdoc") !== null) {
+    return;
+  }
+  const resizing = () => {
+    try {
+      var iframeContent =
+        iframe.contentDocument || iframe.contentWindow.document;
+      iframe.style.height = iframeContent.documentElement.scrollHeight + "px";
+    } catch (e) {
+      console.error("Error adjusting iframe height: ", e);
     }
-  });
-}
+  };
+  iframe.onload = resizing;
+  // now do the assign
+  const srcdoc = iframe.getAttribute("srcdoc-to-set");
+  iframe.setAttribute("srcdoc", srcdoc);
+});

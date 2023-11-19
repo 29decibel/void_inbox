@@ -5,7 +5,8 @@
   <div class="my-4 py-20 rounded-lg shadow-md border px-10">
     <%= if !@has_emails do %>
       <p class="text-center text-gray-600">
-        <a class="border-b-2 border-blue-400" href={~p"/users/settings"}>Add an email address</a> to receive letters.
+        <a class="border-b-2 border-blue-400" href={~p"/users/settings"}>Add an email address</a>
+        to receive letters.
       </p>
     <% else %>
       <p class="text-center text-gray-600 text-lg">
@@ -22,7 +23,7 @@
     <li class="shadow my-4 p-4 rounded-lg relative">
       <div
         class="letter-card flex flex-row items-center cursor-pointer"
-        phx-click="mark-read"
+        phx-click={JS.push("mark-read") |> JS.toggle(to: "#letter-card-#{letter.id} iframe") |> JS.dispatch("resize-iframe-height", to: "#letter-card-#{letter.id} iframe")}
         phx-value-id={letter.id}
       >
         <div class="flex flex-row items-center grow">
@@ -43,13 +44,8 @@
       </div>
       <!-- Need this extra div wrapper because phx-update ignore only apply to the children -->
       <div id={"letter-card-" <> letter.id} phx-update="ignore">
-        <letter-card class="prose">
-          <template shadowrootmode="closed">
-            <slot></slot>
-          </template>
-          <%= if letter.html_content, do: raw(letter.html_content), else: letter.text_content %>
-          </letter-card>
-        </div>
-      </li>
-    <% end %>
-  </ul>
+        <iframe sandbox="allow-same-origin" srcdoc-to-set={letter |> letter_content()} class="hidden w-full mt-2 flex-grow"></iframe>
+      </div>
+    </li>
+  <% end %>
+</ul>
