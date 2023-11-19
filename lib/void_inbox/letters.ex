@@ -129,7 +129,7 @@ defmodule VoidInbox.Letters do
         to_email: to_email,
         from_name: from_name,
         from_email: from_email,
-        html_content: html_body |> Html.Cleaning.clean(),
+        html_content: html_body |> Html.Cleaning.clean() |> Html.Cleaning.link_target_blank(),
         text_content: text_body,
         subject: subject,
         date: date_string |> parse_date_string,
@@ -159,4 +159,18 @@ defmodule VoidInbox.Letters do
       # remove double space ?
       |> String.replace("  ", " ")
       |> Timex.parse!("{RFC1123}")
+
+  def cleaning_up_html() do
+    # find each letter and clean up them once
+    # this is a one time thing
+    Letter
+    |> Repo.all()
+    |> Enum.each(fn letter ->
+      letter
+      |> update_letter(%{
+        html_content:
+          letter.html_content |> Html.Cleaning.clean() |> Html.Cleaning.link_target_blank()
+      })
+    end)
+  end
 end

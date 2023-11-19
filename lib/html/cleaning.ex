@@ -16,4 +16,16 @@ defmodule Html.Cleaning do
         html_string
     end
   end
+
+  def link_target_blank(html_string) do
+    case html_string |> Floki.parse_document() do
+      {:ok, doc} ->
+        doc
+        |> Floki.attr("a", "target", fn _ -> "_blank" end)
+        |> Floki.raw_html()
+
+      _ ->
+        html_string
+    end
+  end
 end

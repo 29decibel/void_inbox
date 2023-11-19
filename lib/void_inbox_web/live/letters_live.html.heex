@@ -44,7 +44,7 @@
       </div>
       <!-- Need this extra div wrapper because phx-update ignore only apply to the children -->
       <div id={"letter-card-" <> letter.id} phx-update="ignore">
-        <iframe sandbox="allow-same-origin" srcdoc-to-set={letter |> letter_content()} class="hidden w-full mt-2 flex-grow"></iframe>
+        <iframe sandbox="allow-same-origin allow-popups" srcdoc-to-set={letter |> letter_content()} class="hidden w-full mt-2 flex-grow"></iframe>
       </div>
     </li>
   <% end %>
