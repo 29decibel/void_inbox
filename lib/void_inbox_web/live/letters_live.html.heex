@@ -2,7 +2,7 @@
   Inbox
 </.header>
 <%= if Enum.count(@letters) == 0 do %>
-  <div class="my-4 py-20 rounded-lg shadow-md border px-10">
+  <div class="my-4 py-20 rounded-lg shadow-md border px-10 bg-white">
     <%= if !@has_emails do %>
       <p class="text-center text-gray-600">
         <a class="border-b-2 border-blue-400" href={~p"/users/settings"}>Add an email address</a>
