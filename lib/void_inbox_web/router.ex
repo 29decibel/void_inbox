@@ -70,7 +70,7 @@ defmodule VoidInboxWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       # letters list
-      live "/letters", LettersLive, :index
+      live "/inbox", LettersLive, :index
     end
   end
 

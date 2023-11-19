@@ -1,7 +1,22 @@
 <.header class="text-center">
   Inbox
 </.header>
-
+<%= if Enum.count(@letters) == 0 do %>
+  <div class="my-4 py-20 rounded-lg shadow-md border px-10">
+    <%= if !@has_emails do %>
+      <p class="text-center text-gray-600">
+        <a class="border-b-2 border-blue-400" href={~p"/users/settings"}>Add an email address</a> to receive letters.
+      </p>
+    <% else %>
+      <p class="text-center text-gray-600 text-lg">
+        <%= @random_quote |> elem(1) %>
+      </p>
+      <p class="text-center text-gray-600 mt-5">
+        - <%= @random_quote |> elem(0) %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
 <ul class="letter-list">
   <%= for letter <- @letters do %>
     <li class="shadow my-4 p-4 rounded-lg relative">
@@ -22,7 +37,6 @@
             <%= letter.subject %>
           </p>
         </div>
-
         <div class="text-gray-600 grow-0 text-sm">
           <%= letter.from_name %>
         </div>
@@ -34,8 +48,8 @@
             <slot></slot>
           </template>
           <%= if letter.html_content, do: raw(letter.html_content), else: letter.text_content %>
-        </letter-card>
-      </div>
-    </li>
-  <% end %>
-</ul>
+          </letter-card>
+        </div>
+      </li>
+    <% end %>
+  </ul>

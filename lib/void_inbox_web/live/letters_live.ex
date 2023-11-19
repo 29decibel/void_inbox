@@ -4,8 +4,13 @@ defmodule VoidInboxWeb.LettersLive do
   def mount(_params, _session, socket) do
     current_user = socket.assigns[:current_user]
     # get current user
+    emails = VoidInbox.VoidEmails.list_void_emails(current_user.id)
 
-    {:ok, assign(socket, letters: VoidInbox.Letters.list_letters(current_user.id))}
+    {:ok,
+     socket
+     |> assign(letters: VoidInbox.Letters.list_letters(current_user.id))
+     |> assign(has_emails: Enum.count(emails) > 0)
+     |> assign(random_quote: StoicQuotes.random_quotes())}
   end
 
   def handle_event("mark-read", %{"id" => letter_id}, socket) do
