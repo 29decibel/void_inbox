@@ -64,3 +64,18 @@ window.addEventListener("resize-iframe-height", (event) => {
   const srcdoc = iframe.getAttribute("srcdoc-to-set");
   iframe.setAttribute("srcdoc", srcdoc);
 });
+
+window.addEventListener("copy-to-clipboard", (event) => {
+  console.log(event.target);
+  const copyTarget = event.target;
+  if (copyTarget && copyTarget.dataset && copyTarget.dataset.copyText) {
+    navigator.clipboard.writeText(copyTarget.dataset.copyText).then(
+      () => {
+        console.log("Copied to clipboard successfully!");
+      },
+      (err) => {
+        console.error("Could not copy text: ", err);
+      }
+    );
+  }
+});

@@ -10,6 +10,15 @@
     <:col :let={void_email} label="Inbox Email">
       <%= void_email.name %>@<%= Application.get_env(:void_inbox, :email_domain) %>
     </:col>
+    <:col :let={void_email}>
+      <button
+        id={"button-" <> void_email.id }
+        data-copy-text={void_email.name <> "@" <> Application.get_env(:void_inbox, :email_domain)}
+        phx-click={JS.dispatch("copy-to-clipboard", to: "#button-" <> void_email.id)}
+      >
+        <.icon name="hero-clipboard" />
+      </button>
+    </:col>
     <:action :let={void_email}>
       <.button phx-click="delete-void-email" phx-value-id={void_email.id}>Delete</.button>
     </:action>
@@ -20,6 +29,39 @@
 
     <:actions>
       <.button phx-disable-with="Changing...">Create Email</.button>
+    </:actions>
+  </.simple_form>
+</div>
+
+<.header class="text-center">
+  RSS Feeds
+  <:subtitle>
+    RSS feeds you can use to subscribe to your inbox.
+  </:subtitle>
+</.header>
+
+<div>
+  <.table id="rss_feeds" rows={@rss_feeds}>
+    <:col :let={feed} label="Feed URL">
+      <%= url(~p"/feeds/#{feed.slug}") %>
+    </:col>
+    <:col :let={feed}>
+      <button
+        id={"button-" <> feed.id }
+        data-copy-text={url(~p"/feeds/#{feed.slug}")}
+        phx-click={JS.dispatch("copy-to-clipboard", to: "#button-" <> feed.id)}
+      >
+        <.icon name="hero-clipboard" />
+      </button>
+    </:col>
+    <:col :let={feed}>
+      <.button phx-click="delete-rss-feed" phx-value-id={feed.id}>Delete</.button>
+    </:col>
+  </.table>
+
+  <.simple_form for={@feed_form} id="rss_feed_form" phx-submit="create_feed">
+    <:actions>
+      <.button phx-disable-with="Changing...">Create RSS Feed</.button>
     </:actions>
   </.simple_form>
 </div>

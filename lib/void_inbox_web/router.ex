@@ -74,6 +74,13 @@ defmodule VoidInboxWeb.Router do
     end
   end
 
+  # public atom feeds
+  scope "/", VoidInboxWeb do
+    pipe_through [:browser]
+
+    get "/feeds/:slug", FeedController, :show
+  end
+
   scope "/", VoidInboxWeb do
     pipe_through [:browser]
 

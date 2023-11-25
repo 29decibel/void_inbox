@@ -2,6 +2,7 @@ defmodule VoidInboxWeb.UserSettingsLive do
   use VoidInboxWeb, :live_view
 
   alias VoidInbox.Accounts
+  alias VoidInbox.Feeds
 
   def mount(%{"token" => token}, _session, socket) do
     socket =
@@ -21,10 +22,20 @@ defmodule VoidInboxWeb.UserSettingsLive do
     email_changeset = Accounts.change_user_email(user)
     password_changeset = Accounts.change_user_password(user)
 
+    # void email
     void_email_changeset =
       VoidInbox.VoidEmails.change_void_email(%VoidInbox.VoidEmails.VoidEmail{})
 
     void_emails = VoidInbox.VoidEmails.list_void_emails(user.id)
+
+    # rss feed
+    rss_feeds = Feeds.list_feeds(user.id)
+
+    feed_form =
+      Feeds.change_feed(%Feeds.Feed{}, %{
+        slug: RandomStringGenerator.random_friendly_string(),
+        user_id: user.id
+      })
 
     socket =
       socket
@@ -35,6 +46,8 @@ defmodule VoidInboxWeb.UserSettingsLive do
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:void_email_form, to_form(void_email_changeset))
       |> assign(:void_emails, void_emails)
+      |> assign(:rss_feeds, rss_feeds)
+      |> assign(:feed_form, feed_form)
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
@@ -122,5 +135,20 @@ defmodule VoidInboxWeb.UserSettingsLive do
     # remove from current void_emails
     void_emails = Enum.filter(socket.assigns.void_emails, fn v -> v.id != id end)
     {:noreply, assign(socket, void_emails: void_emails)}
+  end
+
+  def handle_event("create_feed", %{}, socket) do
+    {:ok, feed} = Feeds.create_feed_for_user(socket.assigns.current_user.id)
+    # add feed to existing feeds
+    feeds = socket.assigns.rss_feeds ++ [feed]
+    {:noreply, assign(socket, rss_feeds: feeds)}
+  end
+
+  def handle_event("delete-rss-feed", %{"id" => id, "value" => ""}, socket) do
+    feed = Feeds.get_feed!(id)
+    Feeds.delete_feed(feed)
+    # remove from current rss_feeds
+    rss_feeds = Enum.filter(socket.assigns.rss_feeds, fn v -> v.id != id end)
+    {:noreply, assign(socket, rss_feeds: rss_feeds)}
   end
 end
